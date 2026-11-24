@@ -18,8 +18,7 @@ pipeline {
             steps {
                 dir('backend') {
                     withSonarQubeEnv('sonarqube') {
-                        sh 'mvn sonar:sonar'
-                    }
+                    sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.token=$SONAR_AUTH_TOKEN'                    }
                 }
             }
         }
