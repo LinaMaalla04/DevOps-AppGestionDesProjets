@@ -14,6 +14,15 @@ pipeline {
                 dir('backend') { sh 'mvn test' }
             }
         }
+        stage('SonarQube Analysis') {
+            steps {
+                dir('backend') {
+                    withSonarQubeEnv('sonarqube') {
+                        sh 'mvn sonar:sonar'
+                    }
+                }
+            }
+        }
         stage('Build Frontend') {
             steps {
                 dir('frontend') {
