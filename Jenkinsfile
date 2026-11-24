@@ -30,6 +30,21 @@ pipeline {
                 }
             }
         }
+            stage('Docker Build') {
+            steps {
+                sh 'docker build -t linamaalla/gestion-projets-backend:latest backend'
+                sh 'docker build -t linamaalla/gestion-projets-frontend:latest frontend'
+            }
+        }
+        stage('Docker Push') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DH_USER', passwordVariable: 'DH_PASS')]) {
+                    sh 'echo "$DH_PASS" | docker login -u "$DH_USER" --password-stdin'
+                    sh 'docker push linamaalla/gestion-projets-backend:latest'
+                    sh 'docker push linamaalla/gestion-projets-frontend:latest'
+                }
+            }
+        }
         stage('Archive') {
             steps {
                 archiveArtifacts artifacts: 'backend/target/*.jar', fingerprint: true
